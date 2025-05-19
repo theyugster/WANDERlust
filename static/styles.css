@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&display=swap');
+:root{
+    --primary-color:#669ccb;
+    --primary-color-dark:#5681a7;
+    --secondary-color:#e8f1fa;
+    --text-dark:#282d31;
+    --text-light:#767268;
+    --extra-light:#f3f4f6;
+
+    --max-width:1200px;   
+}
+
+*{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+
+}
+.section_container{
+    padding: 5rem 1rem;
+    max-width: var(--max-width);
+    margin: auto;
+}
+.section_title{
+    font-size:2rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.section_subtitle{
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--primary-color);
+    margin-bottom: 5rem;
+    text-align: center;
+
+}
+img{
+    width:100%;
+}
+body{
+    font-family: "Big Shoulders", sans-serif;
+    font-optical-sizing: auto;
+}
+nav{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2rem 1rem;
+    width: 100%;
+    max-width:var(--max-width);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav_logo a{
+    text-decoration: none;
+    color: var(--extra-light);
+    font-size: 1.5rem;   
+}
+.nav_links{
+    display: none;
+    list-style: none;
+    align-items: center;
+    gap: 2rem;
+}
+.nav_link{
+    color: var(--extra-light);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.link:hover{
+    color: var(--primary-color);
+}
+header{
+    height: 100vh;
+    background-image: linear-gradient(rgba(45,92,132,.5),rgba(45,92,132,.5)),url("/static/UIDbackground.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size:cover;
+}
+header.section_container{
+    height:100%;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+}
+.header_content{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap:2rem;
+    color: var(--extra-light);
+}
+.header_content h1{
+    font-size: 5rem;
+    font-weight: 400;
+    line-height: 5rem;
+}
+.header_content p{
+    text-align: center;
+}
+.header_content button{
+    padding: 1rem 2rem;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color:var(--extra-light);
+    font-size: 1rem;
+    cursor: pointer;
+    transition:0.3s;
+}
+.header_content button:hover{
+    background-color: var(--primary-color-dark);
+}
+@media (min-width:640px){
+    .nav_links{
+        display: flex;
+    }
+    header .section_container{
+        justify-content: flex-start;
+    }
+    .header_content{
+        max-width:400px;
+        align-items: flex-start;
+    }
+    .header_content p{
+        text-align: left;
+    }
+}

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome Back!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Ensure body takes full height for gradient */
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            /* Enhanced background gradient */
+            background: linear-gradient(to bottom, #0a192f, #13578a); /* Dark navy to a mid-blue */
+            color: #f0f0f0; /* Default text color */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* Enhanced gradient and slightly more padding */
+            background: linear-gradient(to bottom, rgba(40, 40, 40, 0.95), rgba(20, 20, 20, 0.9));
+            padding: 15px 30px; /* Increased padding */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10001; /* Ensure nav is above everything */
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4); /* Slightly stronger shadow */
+        }
+
+        nav .logo img {
+            height: 45px; /* Slightly larger logo */
+            vertical-align: middle; /* Align image nicely */
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 25px; /* Increased spacing */
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600; /* Slightly bolder */
+            font-size: 0.95em;
+            transition: color 0.3s ease; /* Smooth hover transition */
+        }
+
+        nav ul li a:hover {
+            color: #64ffda; /* Accent color on hover */
+            text-decoration: none;
+        }
+
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative; /* Needed for absolute positioning of children like .welcome-title */
+            /* Background is now on the body */
+        }
+
+        /* Added Welcome Title */
+        .welcome-title {
+            position: absolute;
+            top: 20%; /* Position below nav */
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 2.8em;
+            font-weight: 300;
+            z-index: 10; /* Above runway */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+            pointer-events: none; /* Doesn't interfere with clicks */
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition-delay: 0.5s; /* Delay fade out slightly */
+        }
+
+        section:active .welcome-title {
+            opacity: 0;
+            transform: translate(-50%, -50px); /* Move up and fade out */
+            transition-delay: 0s; /* Fade out immediately on active */
+        }
+
+
+        section .runway {
+            position: relative;
+            width: 400px;
+            height: 100vh;
+            /* Darker, desaturated runway color */
+            background-color: #2c3e50; /* Slate gray/blue */
+            /* Replaced borders with inset shadows for softer edges */
+            box-shadow: inset 10px 0 15px rgba(0,0,0,0.2), inset -10px 0 15px rgba(0,0,0,0.2);
+            border-left: none; /* Remove old border */
+            border-right: none; /* Remove old border */
+            transition: transform 1s;
+            transition-delay: 1s;
+            transform-origin: top;
+        }
+
+        section:active .runway {
+            transform: scaleX(0.7) scaleY(0);
+            transition-delay: 0s;
+            transform-origin: bottom;
+        }
+
+        section .runway::before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 100%;
+            /* Slightly softer white for lines */
+            background: repeating-linear-gradient(transparent 0%, transparent 50%, #f0f0f0 50%, #f0f0f0 100%);
+            background-size: 20px 320px;
+            animation: animateRunway 0.5s linear infinite;
+        }
+
+        section:active .runway::before {
+            animation: animateRunway 0.25s linear infinite;
+        }
+
+        @keyframes animateRunway {
+            0% { background-position-y: 0px; }
+            100% { background-position-y: 640px; }
+        }
+
+        .plane {
+            position: absolute;
+            bottom: 100px;
+            max-width: 250px;
+            pointer-events: none;
+            filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0.5));
+            transition: 5s ease-out; /* Added ease-out for smoother end */
+            z-index: 50; /* Ensure plane is above runway but below clouds */
+        }
+
+        section:active .plane {
+            max-width: 450px; /* Slightly larger apparent size when 'far away' */
+            filter: drop-shadow(150px 150px 15px rgba(0, 0, 0, 0.35)); /* Softer, larger shadow */
+            transform: translateY(-100px); /* Make it lift off slightly more */
+        }
+
+        .clouds {
+            position: absolute;
+            top: 0; /* Ensure clouds start from top */
+            left: 0;
+            z-index: 10000; /* Above plane */
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2s ease-in; /* Added ease-in */
+            transition-delay: 0s;
+        }
+
+        .clouds2 {
+            left: auto; /* Override left: 0 */
+            right: 0;
+            transform: rotate(180deg);
+        }
+
+        section:active .clouds {
+            opacity: 1;
+            transition-delay: 1s; /* Keep original delay */
+        }
+
+        .clouds img {
+            position: absolute;
+            bottom: 0; /* Start animation from bottom */
+            left: 0; /* Aligns rotated images correctly */
+            width: 800px;
+            animation: animateClouds 4s linear infinite;
+            animation-delay: calc(1.5s * var(--i));
+            filter: opacity(0.8); /* Make clouds slightly transparent */
+        }
+         /* Removed the separate .clouds p selector as it wasn't used in HTML */
+
+        .clouds2 img {
+             /* Inherits animation from .clouds img, just needs delay override */
+            animation-delay: calc(1.5s * var(--i));
+            /* No need for separate keyframes if movement is the same */
+        }
+
+
+        @keyframes animateClouds { /* Single keyframe for both sets */
+            0% {
+                transform: translateY(100%);
+            }
+            100% {
+                transform: translateY(-100%); /* Moves from bottom to top */
+            }
+        }
+
+
+        .saved-pois-container {
+            position: absolute;
+            top: 100px; /* Adjusted for taller navbar */
+            left: 30px;
+            z-index: 9000; /* Below nav, above most elements */
+            color: #e0e0e0; /* Slightly softer white text */
+            /* Darker, less distracting background */
+            background-color: rgba(10, 25, 47, 0.8); /* Match dark part of gradient */
+            padding: 20px; /* More padding */
+            border-radius: 8px;
+            max-height: 300px; /* Increased max height */
+            overflow-y: auto;
+            width: 320px; /* Slightly wider */
+            pointer-events: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Add shadow */
+            opacity: 0; /* Start hidden */
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out; /* Fade in */
+            right:auto;
+        }
+
+        /* Fade in the POI box */
+         body:not(:active) .saved-pois-container { /* Fade in when section is NOT active, allows initial view */
+             opacity: 0.0;
+         }
+        /* Keep it visible during/after animation if needed */
+         section:active + .saved-pois-container {
+             opacity: 0.9;
+             transition-delay: 0.5s; /* Optional: Delay fade-in during active state */
+         }
+
+
+        .saved-pois-container h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+             /* Accent color for heading */
+            color: #64ffda;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.5); /* Accent border */
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .saved-pois-container ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .saved-pois-container li {
+            padding: 8px 0; /* More padding */
+            /* Subtle dashed line separator */
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            font-size: 0.9em;
+        }
+         /* Remove border from the last item */
+        .saved-pois-container li:last-child {
+            border-bottom: none;
+        }
+        .empty-poi-message {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 20px 0; 
+            margin: 0; 
+        }
+
+        
+        .saved-pois-container::-webkit-scrollbar {
+          width: 8px;
+        }
+        .saved-pois-container::-webkit-scrollbar-track {
+          background: rgba(10, 25, 47, 0.5);
+          border-radius: 4px;
+        }
+        .saved-pois-container::-webkit-scrollbar-thumb {
+          background-color: rgba(100, 255, 218, 0.6); /* Accent color */
+          border-radius: 4px;
+          border: 2px solid transparent;
+          background-clip: content-box;
+        }
+        .saved-pois-container::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(100, 255, 218, 0.8);
+        }
+        .saved-pois-container {
+            position: absolute;
+            top: 100px; /* Adjusted for taller navbar */
+            left: 30px;
+            z-index: 9000; 
+            color: #e0e0e0;
+            background-color: rgba(10, 25, 47, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 320px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+
+            
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.5s ease-in-out; 
+            
+            
+        }
+
+        
+        section:active + .saved-pois-container {
+            opacity: 0.9; 
+            pointer-events: auto; 
+            transition-delay: 0.8s; 
+        }
+
+
+        .saved-pois-container h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #64ffda;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.5);
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .saved-pois-container ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .saved-pois-container li {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            font-size: 0.9em;
+        }
+        .saved-pois-container li:last-child {
+            border-bottom: none;
+        }
+
+        .empty-poi-message {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        
+        .saved-pois-container::-webkit-scrollbar {
+          width: 8px;
+        }
+        .saved-pois-container::-webkit-scrollbar-track {
+          background: rgba(10, 25, 47, 0.5);
+          border-radius: 4px;
+        }
+        .saved-pois-container::-webkit-scrollbar-thumb {
+          background-color: rgba(100, 255, 218, 0.6);
+          border-radius: 4px;
+          border: 2px solid transparent;
+          background-clip: content-box;
+        }
+        .saved-pois-container::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(100, 255, 218, 0.8);
+        }
+        .saved-images-container {
+    position: absolute;
+    top: 100px;
+    right: 30px;
+    z-index: 9000;
+    color: #e0e0e0;
+    background-color: rgba(10, 25, 47, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 320px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+    left:auto;
+}
+
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.saved-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.saved-image:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.empty-image-message {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+}
+
+
+section:active ~ .saved-images-container {
+    opacity: 0.9;
+    pointer-events: auto;
+    transition-delay: 0.8s;
+}
+
+
+.saved-images-container::-webkit-scrollbar {
+    width: 8px;
+}
+.saved-images-container::-webkit-scrollbar-track {
+    background: rgba(10, 25, 47, 0.5);
+    border-radius: 4px;
+}
+.saved-images-container::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 255, 218, 0.6);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+.saved-images-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 255, 218, 0.8);
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='wanderlustlogo.jpg') }}" alt="GoWanderlust Logo">
+        </div>
+        <ul>
+            <li><a href="/logout">Logout</a></li>
+            <li><a href="/suggest">Suggestions</a></li>
+            <li><a href="/flightpricepredictor">FlightPricePredictor</a></li>
+            <li><a href="{{ url_for('weather_page') }}">Weather</a></li>
+            </ul>
+    </nav>
+
+    <section>
+        <h1 class="welcome-title">Hold to Take Off!</h1>
+        <div class="runway"></div>
+        <img src="{{ url_for('static', filename='transplane.png') }}" class="plane">
+
+    </section> {% if saved_pois %}
+        <div class="saved-pois-container">
+            <h4>Your Saved Points of Interest:</h4>
+            <ul>
+                {% for poi in saved_pois %}
+                    <li>{{ poi }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+         <div class="saved-pois-container" style="height: auto;">
+           <p class="empty-poi-message">You haven't saved any points of interest yet.</p>
+        </div>
+    {% endif %}
+    {% if saved_images and saved_images|length > 0 %}
+    <div class="saved-images-container">
+        <h4>Your Saved Images:</h4>
+        <div class="image-tabs">
+            {% for image_group in saved_images %}
+                <div class="image-tab">
+                    <div class="image-grid">
+                        {% for image_url in image_group %}
+                            <img src="{{ image_url }}" alt="Saved location image" class="saved-image">
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <div class="saved-images-container" style="height: auto;">
+        <p class="empty-image-message">You haven't saved any images yet.</p>
+    </div>
+{% endif %}
+</body>
+</html>

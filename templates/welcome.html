@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome New User</title>
+</head>
+<body>
+    <h2>Welcome, {{ user }}! Plan Your First Trip.</h2>
+    
+    <h3>Top-Rated Locations</h3>
+    <ul id="most-rated-list"></ul>
+
+    <a href="/logout"><button>Logout</button></a>
+
+    <script>
+        fetch('/most-rated-locations')
+            .then(response => response.json())
+            .then(data => {
+                let list = document.getElementById('most-rated-list');
+                data.forEach(location => {
+                    let item = document.createElement('li');
+                    item.innerHTML = `<strong>${location["Location Name"]}</strong> - ⭐ ${location["Rating"]}/5 (Best month: ${location["Best Month"]})`;
+                    list.appendChild(item);
+                });
+            })
+            .catch(error => console.error('Error fetching locations:', error));
+    </script>
+</body>
+</html>

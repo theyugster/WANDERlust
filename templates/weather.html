@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather by Latitude and Longitude</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1592210454359-9043f067919b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        animation: fadeIn 1s ease-in-out;
+    }
+    h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 4s ease infinite;
+            background-size: 200% 200%;
+        }
+    .container {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 2.5rem;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        animation: slideUp 0.8s ease-out;
+        margin: 80px auto; 
+    }
+    label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+            text-align: left;
+            color: #feb47b;
+        }
+        input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(254, 180, 123, 0.4);
+            transform: scale(1.02);
+        }
+        button {
+            padding: 12px;
+            margin-top: 1rem;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 126, 95, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+        nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(51, 51, 51, 0.9); 
+        padding: 10px 20px;
+        position: fixed; 
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000; 
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
+    }
+nav .logo img {
+    height: 40px;
+}
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+nav ul li {
+    margin-left: 20px;
+}
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+nav ul li a:hover {
+    text-decoration: underline;
+}
+.message {
+            padding: 15px;
+            margin: 1.5rem 0 0;
+            border-radius: 8px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            max-height: 500px;
+            animation: fadeInMessage 0.5s ease-out;
+        }
+        .image-gallery {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center; 
+            padding-top: 1rem; 
+            border-top: 1px solid rgba(255, 255, 255, 0.2); 
+        }
+        .city-image {
+            width: 120px; 
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #feb47b;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .city-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .image-gallery h4 {
+            width: 100%;
+            text-align: center;
+            color: #ff7e5f;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+        .image-gallery p { 
+             width: 100%;
+             text-align: center;
+             color: rgba(255, 255, 255, 0.7);
+        }
+
+        
+        .message.error {
+            background-color: rgba(255, 100, 100, 0.7);
+            color: white;
+            border: 1px solid rgba(255, 0, 0, 0.5);
+        }
+        .message.success {
+             background-color: rgba(100, 200, 100, 0.1); 
+             color: white;
+             border: 1px solid rgba(100, 200, 100, 0.2);
+             padding-bottom: 1.5rem; 
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes gradientShift { /* ... */ }
+        @keyframes fadeInMessage { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='wanderlustlogo.jpg') }}" alt="GoWanderlust Logo">
+        </div>
+        <ul>
+            <li><a href="/logout">Logout</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/suggest">Suggestion</a></li>
+            <li><a href="/flightpricepredictor">FlightPricePredictor</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+    <h1>Weather Information by Coordinates</h1>
+    <label for="city">CITY:</label>
+    <input type="text" id="city" placeholder="Enter CITY"><br><br>
+    <button onclick="getcity()">Get city</button>
+    <div id="result" class="message"></div>
+    <div id="image-container" class="image-gallery">
+    </div>
+    </div>
+    <script>
+        function getcity() {
+            const cityInput = document.getElementById('city');
+            const city = cityInput.value.trim(); 
+            const resultDiv = document.getElementById('result');
+            const imageContainer = document.getElementById('image-container'); 
+
+            
+            resultDiv.innerHTML = '';
+            resultDiv.className = "message"; 
+            imageContainer.innerHTML = ''; 
+            imageContainer.className = "image-gallery"; 
+
+            if (!city) {
+                resultDiv.className = "message error show";
+                resultDiv.textContent = "Please enter a city name.";
+                cityInput.focus(); 
+                return; 
+            }
+
+            resultDiv.className = "message show"; 
+            resultDiv.textContent = `Workspaceing data for ${city}...`;
+            fetch(`/weather/${encodeURIComponent(city)}`) 
+                .then(response => {
+                    if (!response.ok) {
+                        
+                        return response.json().then(errData => {
+                            throw new Error(errData.error || `HTTP error! Status: ${response.status}`);
+                        }).catch(() => { 
+                             throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
+                        });
+                    }
+                    return response.json(); 
+                })
+                .then(data => {
+                    
+                    if (data.error) {
+                         resultDiv.className = "message error show";
+                         resultDiv.textContent = data.error;
+                         imageContainer.innerHTML = ''; 
+                         return; 
+                    }
+
+                    
+                    resultDiv.className = "message success show"; 
+                    const tempText = data.temperature !== null ? `${data.temperature} °C` : 'N/A';
+                    const descText = data.description || 'N/A';
+                    resultDiv.innerHTML = `
+                        <h3>Weather in ${data.city || 'N/A'}</h3>
+                        <p>Temperature: ${tempText}</p>
+                        <p>Conditions: ${descText}</p>
+                    `;
+
+                    
+                    imageContainer.innerHTML = ''; 
+
+                    if (data.images && data.images.length > 0) {
+                        
+                        const galleryTitle = document.createElement('h4');
+                        galleryTitle.textContent = `Images of ${data.city || 'Location'}`;
+                        imageContainer.appendChild(galleryTitle);
+
+                        
+                        data.images.forEach(imageUrl => {
+                            const imgElement = document.createElement('img');
+                            imgElement.src = imageUrl;
+                            imgElement.alt = `Image of ${data.city || 'location'}`;
+                            imgElement.classList.add('city-image'); 
+                            imgElement.onerror = function() { 
+                                this.style.display='none'; 
+                            };
+                            imageContainer.appendChild(imgElement);
+                        });
+                    } else {
+                        // Message if no images are returned
+                        imageContainer.innerHTML = '<p>No images found for this city.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    resultDiv.className = "message error show";
+                
+                    resultDiv.textContent = `Failed to fetch data: ${error.message || 'Unknown error'}. Please try again.`;
+                    imageContainer.innerHTML = ''; 
+                });
+        }
+    </script>
+</body>
+</html>
